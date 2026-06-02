@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+.sfm-wrap{font-family:'Pretendard',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;color:#1a2744;max-width:1100px;margin:0 auto;padding:0 20px}
+.sfm-wrap *{box-sizing:border-box}
+.sfm-carousel{position:relative;border-radius:18px;overflow:hidden;margin-bottom:40px;aspect-ratio:16/9;background:#1a2744}
+.sfm-slides{display:flex;transition:transform .5s ease;height:100%}
+.sfm-slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:800;position:relative;background-size:cover;background-position:center}
+.sfm-slide.s1{background:linear-gradient(135deg,#1a2744,#2d4570)}
+.sfm-slide.s2{background:linear-gradient(135deg,#E8772E,#c25e1d)}
+.sfm-slide.s3{background:linear-gradient(135deg,#2d4570,#1a2744)}
+.sfm-slide span{padding:0 20px;text-align:center;word-break:keep-all}
+.sfm-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+.sfm-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;transition:background .2s}
+.sfm-dot.active{background:#fff}
+.sfm-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;transition:background .2s}
+.sfm-arrow:hover{background:rgba(255,255,255,.35)}
+.sfm-prev{left:16px}.sfm-next{right:16px}
+
+.sfm-hero{text-align:center;padding:8px 0 40px}
+.sfm-hero-label{font-size:13px;font-weight:700;letter-spacing:2px;color:#E8772E;margin-bottom:14px}
+/* 뉴스레터 신청 바 */
+.sfm-nl{background:linear-gradient(180deg,#eef1f9 0%,#f7f9fc 100%);border-radius:18px;padding:40px 28px;text-align:center;margin-bottom:40px}
+.sfm-nl-label{font-size:13px;font-weight:700;letter-spacing:1px;color:#E8772E;margin-bottom:10px}
+.sfm-nl-title{font-size:26px;font-weight:800;color:#1a2744;margin-bottom:22px}
+.sfm-nl-form{display:flex;gap:10px;max-width:520px;margin:0 auto 14px;justify-content:center}
+.sfm-nl-input{flex:1;padding:15px 22px;border:1.5px solid #ddd;border-radius:999px;font-size:15px;font-family:inherit;outline:none;transition:border .15s}
+.sfm-nl-input:focus{border-color:#1a2744}
+.sfm-nl-btn{background:#1a2744;color:#fff;border:none;border-radius:999px;padding:15px 30px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:transform .15s,opacity .15s}
+.sfm-nl-btn:hover{opacity:.9;transform:scale(1.02)}
+.sfm-nl-note{font-size:13px;color:#999}
+.sfm-nl-error{font-size:12px;color:#e74c3c;margin-top:8px;display:none}
+.sfm-nl-done{display:none}
+.sfm-nl-done .c{font-size:40px;margin-bottom:12px}
+.sfm-nl-done h3{font-size:22px;font-weight:800;color:#1a2744;margin-bottom:8px}
+.sfm-nl-done p{font-size:14px;color:#666}
+.sfm-hero-title{font-size:38px;font-weight:800;line-height:1.35;margin-bottom:16px;word-break:keep-all}
+.sfm-hero-title .o{color:#E8772E}
+.sfm-hero-sub{font-size:16px;color:#666;line-height:1.7;margin-bottom:28px;word-break:keep-all}
+.sfm-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.sfm-btn{padding:15px 36px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;border:none;font-family:inherit;text-decoration:none;display:inline-block;transition:transform .15s,opacity .15s}
+.sfm-btn:hover{transform:translateY(-2px);opacity:.92}
+.sfm-btn-primary{background:#E8772E;color:#fff}
+.sfm-btn-secondary{background:#1a2744;color:#fff}
+
+.sfm-stats-section{background:#0e1320;border-radius:18px;padding:48px 28px;margin-bottom:56px;text-align:center}
+.sfm-stats-label{font-size:13px;font-weight:700;letter-spacing:2px;color:#E8772E;margin-bottom:12px}
+.sfm-stats-title{font-size:30px;font-weight:800;color:#fff;margin-bottom:10px}
+.sfm-stats-sub{font-size:15px;color:rgba(255,255,255,.5);margin-bottom:36px}
+.sfm-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.sfm-stat{background:#171d2e;border-radius:14px;padding:28px 16px}
+.sfm-stat-badge{display:inline-block;background:#E8772E;color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;margin-bottom:16px}
+.sfm-stat-num{font-size:32px;font-weight:800;color:#fff}
+.sfm-stat-num .u{font-size:16px;color:rgba(255,255,255,.5);font-weight:600}
+.sfm-stat-desc{font-size:12px;color:rgba(255,255,255,.55);margin-top:8px;line-height:1.5;word-break:keep-all}
+
+.sfm-section{margin-bottom:56px}
+.sfm-sec-title{font-size:24px;font-weight:800;text-align:center;margin-bottom:8px}
+.sfm-sec-sub{font-size:15px;color:#888;text-align:center;margin-bottom:32px}
+.sfm-sec-more{text-align:center;margin-top:28px}
+.sfm-more-btn{display:inline-block;font-size:14px;font-weight:700;color:#E8772E;text-decoration:none;padding:10px 24px;border:1.5px solid #E8772E;border-radius:999px;transition:background .15s,color .15s}
+.sfm-more-btn:hover{background:#E8772E;color:#fff}
+
+.sfm-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.sfm-card{border:1px solid #e8e8e8;border-radius:14px;padding:28px 22px;transition:transform .2s,box-shadow .2s;text-decoration:none;color:inherit;display:block}
+.sfm-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+.sfm-card-icon{font-size:30px;margin-bottom:14px}
+.sfm-card-title{font-size:17px;font-weight:800;margin-bottom:8px}
+.sfm-card-desc{font-size:13px;color:#777;line-height:1.55;word-break:keep-all}
+.sfm-card-link{font-size:13px;color:#E8772E;font-weight:700;margin-top:14px;display:inline-block}
+
+.sfm-mbanner{background:#1a2744;border-radius:16px;padding:44px 32px;text-align:center;margin-bottom:56px}
+.sfm-mbanner h3{font-size:24px;font-weight:800;color:#fff;margin-bottom:10px}
+.sfm-mbanner p{font-size:15px;color:rgba(255,255,255,.6);margin-bottom:26px;line-height:1.6}
+.sfm-mbanner .sfm-btn-white{background:#fff;color:#1a2744}
+
+.sfm-partner-img{width:100%;border-radius:14px;display:block}
+
+.sfm-rev-carousel{position:relative;overflow:hidden}
+.sfm-rev-track{display:flex;gap:16px;transition:transform .5s ease}
+.sfm-review{flex:0 0 calc(33.333% - 11px);background:#fff;border:1px solid #eee;border-radius:14px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.sfm-rev-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sfm-rev-avatar{width:42px;height:42px;border-radius:50%;background:#E8772E;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;background-size:cover;background-position:center}
+.sfm-rev-name{font-size:14px;font-weight:700;color:#1a2744}
+.sfm-rev-meta{font-size:12px;color:#999}
+.sfm-rev-stars{color:#E8772E;font-size:14px;margin-bottom:10px}
+.sfm-rev-text{font-size:13px;line-height:1.6;color:#555;word-break:keep-all}
+.sfm-revimg{flex:0 0 calc(33.333% - 11px);border-radius:14px;overflow:hidden;border:1px solid #eee;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.sfm-revimg img{width:100%;height:auto;display:block}
+.sfm-rev-nav{display:flex;justify-content:center;gap:10px;margin-top:24px}
+.sfm-rev-btn{width:40px;height:40px;border-radius:50%;border:1px solid #ddd;background:#fff;font-size:18px;cursor:pointer;color:#666;transition:background .15s}
+.sfm-rev-btn:hover{background:#f5f5f5}
+
+/* 활동 사진 자동 슬라이더 */
+.sfm-gallery{overflow:hidden;position:relative}
+.sfm-gallery::before,.sfm-gallery::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+.sfm-gallery::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
+.sfm-gallery::after{right:0;background:linear-gradient(270deg,#fff,transparent)}
+.sfm-gallery-track{display:flex;gap:14px;animation:sfmScroll 30s linear infinite;width:max-content}
+.sfm-gallery-track:hover{animation-play-state:paused}
+.sfm-gphoto{width:280px;height:180px;border-radius:12px;flex-shrink:0;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px}
+.sfm-gphoto.g1{background:linear-gradient(135deg,#1a2744,#2d4570)}
+.sfm-gphoto.g2{background:linear-gradient(135deg,#E8772E,#c25e1d)}
+.sfm-gphoto.g3{background:linear-gradient(135deg,#2d4570,#3a5a8a)}
+.sfm-gphoto.g4{background:linear-gradient(135deg,#c25e1d,#E8772E)}
+.sfm-gphoto.g5{background:linear-gradient(135deg,#1a2744,#0e1320)}
+@keyframes sfmScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.sfm-final{text-align:center;padding:64px 24px;background:linear-gradient(135deg,#1a2744,#0e1320);border-radius:18px;margin-bottom:48px}
+.sfm-final-label{font-size:13px;font-weight:700;letter-spacing:2px;color:#E8772E;margin-bottom:16px}
+.sfm-final h3{font-size:28px;font-weight:800;margin-bottom:16px;word-break:keep-all;color:#fff;line-height:1.4}
+.sfm-final h3 .o{color:#E8772E}
+.sfm-final p{font-size:15px;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.7;word-break:keep-all}
+
+.sfm-footer{background:#0e1320;border-radius:18px;padding:48px 40px;margin-bottom:0}
+.sfm-foot-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sfm-foot-brand .logo{height:32px;width:auto;background:#fff;border-radius:6px;padding:4px 8px;margin-bottom:18px}
+.sfm-foot-logo-text{font-size:22px;font-weight:800;color:#fff;margin-bottom:18px;letter-spacing:-.5px}
+.sfm-foot-brand p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7}
+.sfm-foot-sns{display:flex;gap:10px;margin-top:18px}
+.sfm-foot-sns a{width:38px;height:38px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;text-decoration:none;transition:background .15s}
+.sfm-foot-sns a:hover{background:rgba(255,255,255,.18)}
+.sfm-foot-col h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:18px}
+.sfm-foot-col a{display:block;font-size:13px;color:rgba(255,255,255,.55);margin-bottom:14px;text-decoration:none;transition:color .15s}
+.sfm-foot-col a:hover{color:#fff}
+.sfm-foot-biz{padding-top:28px;font-size:12px;color:rgba(255,255,255,.4);line-height:1.9}
+.sfm-foot-biz strong{color:rgba(255,255,255,.7);font-weight:700}
+.sfm-foot-legal{margin-top:18px;display:flex;gap:18px;flex-wrap:wrap}
+.sfm-foot-legal a{font-size:12px;color:rgba(255,255,255,.6);text-decoration:none}
+.sfm-foot-legal a:hover{color:#fff;text-decoration:underline}
+.sfm-copyright{text-align:center;font-size:12px;color:#bbb;padding:24px 0 40px}
+
+@media(max-width:1024px){
+  .sfm-cards{grid-template-columns:repeat(2,1fr)}
+  .sfm-stats{grid-template-columns:repeat(3,1fr)}
+  .sfm-review{flex:0 0 calc(50% - 8px)}
+  .sfm-revimg{flex:0 0 calc(50% - 8px)}
+  .sfm-foot-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .sfm-carousel{aspect-ratio:4/3}
+  .sfm-slide{font-size:18px}
+  .sfm-hero-title{font-size:28px}
+  .sfm-nl-form{flex-direction:column;gap:8px}
+  .sfm-nl-btn{width:100%}
+  .sfm-nl-title{font-size:21px}
+  .sfm-stats{grid-template-columns:repeat(2,1fr)}
+  .sfm-stats-title{font-size:24px}
+  .sfm-cards{grid-template-columns:1fr}
+  .sfm-cta-row{flex-direction:column}
+  .sfm-btn{width:100%}
+  .sfm-sec-title{font-size:20px}
+  .sfm-review{flex:0 0 100%}
+  .sfm-revimg{flex:0 0 100%}
+  .sfm-gphoto{width:220px;height:140px}
+  .sfm-final h3{font-size:22px}
+  .sfm-foot-top{grid-template-columns:1fr;padding-bottom:28px}
+}
+</style>
+</head>
+<body>
+<div class="sfm-wrap">
+
+  <!-- 1. 캐러셀 (활동 사진) -->
+  <div class="sfm-carousel">
+    <div class="sfm-slides" id="sfmSlides">
+      <div class="sfm-slide" style="background-image:url('slide1.jpg')"></div>
+      <div class="sfm-slide" style="background-image:url('slide2.jpg')"></div>
+      <div class="sfm-slide" style="background-image:url('slide3.jpg')"></div>
+    </div>
+    <button class="sfm-arrow sfm-prev" onclick="sfmMove(-1)">‹</button>
+    <button class="sfm-arrow sfm-next" onclick="sfmMove(1)">›</button>
+    <div class="sfm-dots" id="sfmDots"></div>
+  </div>
+
+  <!-- 1-2. 뉴스레터 신청 바 -->
+  <div class="sfm-nl" id="sfmNl">
+    <div class="sfm-nl-label">FREE NEWSLETTER</div>
+    <div class="sfm-nl-title">뉴스레터 무료 신청하기</div>
+    <p class="sfm-nl-note" style="margin-bottom:22px">시니어 산업 뉴스 · 트렌드 · 행사 소식을 전해드립니다.</p>
+    <a class="sfm-nl-btn" href="https://walla.my/v/HdUG9uCe2rRx9tw1X91u" target="_blank" style="text-decoration:none;display:inline-block">무료 구독 신청</a>
+  </div>
+
+  <!-- 2. 히어로 (CTA 중심) -->
+  <div class="sfm-hero">
+    <div class="sfm-hero-label">SENIOR FUTURE</div>
+    <h1 class="sfm-hero-title">초고령사회 속 <span class="o">장수경제 비즈니스 기회</span>를<br>함께 만들어 나갑니다</h1>
+    <p class="sfm-hero-sub">장수경제 비즈니스 인사이트 · 전문가 · 네트워크를 제공하는 커뮤니티 플랫폼.<br>지금 시니어퓨처와 함께 시작하세요.</p>
+    <div class="sfm-cta-row">
+      <a class="sfm-btn sfm-btn-primary" href="https://walla.my/v/VXu0RAeHFNPZCQy9vKFG" target="_blank">10기 신청하기</a>
+      <a class="sfm-btn sfm-btn-secondary" href="https://apply.seniorfuture.kr/37234a84-148b-809b-8f8d-e877f141959c">멤버십 보기</a>
+    </div>
+  </div>
+
+  <!-- 3. 숫자 카운터 -->
+  <div class="sfm-stats-section">
+    <div class="sfm-stats-label">2.5 YEARS OF SENIOR FUTURE</div>
+    <div class="sfm-stats-title">숫자로 보는 시니어퓨처</div>
+    <div class="sfm-stats-sub">2년 6개월, 10기수 동안 검증된 장수경제 비즈니스 생태계</div>
+    <div class="sfm-stats">
+      <div class="sfm-stat"><div class="sfm-stat-badge">누적 참가자</div><div class="sfm-stat-num"><span class="sfm-count" data-target="1600">0</span><span class="u">명+</span></div><div class="sfm-stat-desc">2.5년간 함께한 커뮤니티</div></div>
+      <div class="sfm-stat"><div class="sfm-stat-badge">정규 멤버</div><div class="sfm-stat-num"><span class="sfm-count" data-target="260">0</span><span class="u">명+</span></div><div class="sfm-stat-desc">10기 정기 멤버</div></div>
+      <div class="sfm-stat"><div class="sfm-stat-badge">세미나</div><div class="sfm-stat-num"><span class="sfm-count" data-target="50">0</span><span class="u">회+</span></div><div class="sfm-stat-desc">전문가 세미나 · 웨비나</div></div>
+      <div class="sfm-stat"><div class="sfm-stat-badge">기업 협업</div><div class="sfm-stat-num"><span class="sfm-count" data-target="20">0</span><span class="u">건+</span></div><div class="sfm-stat-desc">대기업 · 기관 협업</div></div>
+      <div class="sfm-stat"><div class="sfm-stat-badge">언론 보도</div><div class="sfm-stat-num"><span class="sfm-count" data-target="30">0</span><span class="u">건+</span></div><div class="sfm-stat-desc">미디어 보도</div></div>
+    </div>
+  </div>
+
+  <!-- 4. 서비스 카드 -->
+  <div class="sfm-section">
+    <h2 class="sfm-sec-title">진행 서비스</h2>
+    <p class="sfm-sec-sub">배우고 · 연결되고 · 실행하는 4가지 프로그램</p>
+    <div class="sfm-cards">
+      <a class="sfm-card" href="https://apply.seniorfuture.kr/37234a84-148b-805c-92fa-facada66bc65"><div class="sfm-card-icon">📊</div><div class="sfm-card-title">비즈니스 스터디</div><div class="sfm-card-desc">국내외 선도 기업의 비즈니스 모델을 해부하는 실전형 스터디</div><span class="sfm-card-link">자세히 보기 →</span></a>
+      <a class="sfm-card" href="https://apply.seniorfuture.kr/37234a84-148b-8078-98e5-fa071a608220"><div class="sfm-card-icon">🚀</div><div class="sfm-card-title">창업 교육</div><div class="sfm-card-desc">아이디어를 사업계획서로 완성하는 밀착 창업 빌드업</div><span class="sfm-card-link">자세히 보기 →</span></a>
+      <a class="sfm-card" href="https://apply.seniorfuture.kr/37234a84-148b-8010-b9aa-fe7f7ce4b3ec"><div class="sfm-card-icon">🎤</div><div class="sfm-card-title">전문가 강연</div><div class="sfm-card-desc">각 분야 현업 전문가의 인사이트 세미나 · 웨비나</div><span class="sfm-card-link">자세히 보기 →</span></a>
+      <a class="sfm-card" href="https://apply.seniorfuture.kr/37234a84-148b-801b-8182-fa3396cdab6f"><div class="sfm-card-icon">🏢</div><div class="sfm-card-title">현장 탐방</div><div class="sfm-card-desc">시니어 산업 현장을 직접 방문하는 탐방 세션</div><span class="sfm-card-link">자세히 보기 →</span></a>
+    </div>
+  </div>
+
+  <!-- 5. 멤버십 배너 -->
+  <div class="sfm-mbanner">
+    <h3>장수경제 비즈니스를 만들어 나가는 멤버십</h3>
+    <p>콘텐츠 · 커뮤니티 · 웨비나 · 네트워킹을 한 멤버십에서.<br>지금 얼리버드 할인으로 시작하세요.</p>
+    <a class="sfm-btn sfm-btn-white" href="https://apply.seniorfuture.kr/37234a84-148b-809b-8f8d-e877f141959c">멤버십 보기 →</a>
+  </div>
+
+  <!-- 6. 파트너 로고 -->
+  <div class="sfm-section">
+    <h2 class="sfm-sec-title">함께한 기업 · 기관</h2>
+    <p class="sfm-sec-sub">대학 · 대기업 · 미디어 · 공공기관 20건+ 협업으로 검증된 신뢰</p>
+    <img class="sfm-partner-img" src="logo.png" alt="협력 기업·기관 로고">
+    <div class="sfm-sec-more"><a class="sfm-more-btn" href="https://apply.seniorfuture.kr/2c034a84-148b-8018-8c39-f06873cbfb58">기업 협업 자세히 보기 →</a></div>
+  </div>
+
+  <!-- 7. 후기 캐러셀 (캡처 이미지) -->
+  <div class="sfm-section">
+    <h2 class="sfm-sec-title">참가자 후기</h2>
+    <p class="sfm-sec-sub">다양한 배경의 멤버들이 함께합니다</p>
+    <div class="sfm-rev-carousel">
+      <div class="sfm-rev-track" id="sfmRevTrack">
+        <div class="sfm-revimg"><img src="review1.jpg" alt="참가자 후기 1"></div>
+        <div class="sfm-revimg"><img src="review2.jpg" alt="참가자 후기 2"></div>
+        <div class="sfm-revimg"><img src="review3.jpg" alt="참가자 후기 3"></div>
+        <div class="sfm-revimg"><img src="review4.jpg" alt="참가자 후기 4"></div>
+        <div class="sfm-revimg"><img src="review5.jpg" alt="참가자 후기 5"></div>
+        <div class="sfm-revimg"><img src="review6.jpg" alt="참가자 후기 6"></div>
+        <div class="sfm-revimg"><img src="review7.jpg" alt="참가자 후기 7"></div>
+        <div class="sfm-revimg"><img src="review8.jpg" alt="참가자 후기 8"></div>
+        <div class="sfm-revimg"><img src="review9.jpg" alt="참가자 후기 9"></div>
+      </div>
+    </div>
+    <div class="sfm-rev-nav">
+      <button class="sfm-rev-btn" onclick="sfmRevMove(-1)">‹</button>
+      <button class="sfm-rev-btn" onclick="sfmRevMove(1)">›</button>
+    </div>
+    <div class="sfm-sec-more"><a class="sfm-more-btn" href="https://apply.seniorfuture.kr/2e734a84-148b-807f-9136-d1928afd2b1a">참가자 후기 자세히 보기 →</a></div>
+  </div>
+
+  <!-- 8. 활동 사진 자동 슬라이더 -->
+  <div class="sfm-section">
+    <h2 class="sfm-sec-title">함께한 순간들</h2>
+    <p class="sfm-sec-sub">세미나 · 네트워킹 · 현장 탐방의 생생한 현장</p>
+    <div class="sfm-gallery">
+      <div class="sfm-gallery-track">
+        <div class="sfm-gphoto" style="background-image:url('gallery1.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery2.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery3.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery4.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery5.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery6.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery7.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery8.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery9.jpg')"></div>
+        <!-- 무한 루프용 복제 -->
+        <div class="sfm-gphoto" style="background-image:url('gallery1.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery2.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery3.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery4.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery5.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery6.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery7.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery8.jpg')"></div>
+        <div class="sfm-gphoto" style="background-image:url('gallery9.jpg')"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. 비전 마무리 CTA -->
+  <div class="sfm-final">
+    <div class="sfm-final-label">LONGEVITY ECONOMY</div>
+    <h3><span class="o">혁신가</span>를 양성해<br>모든 세대가 함께 <span class="o">더 나은 미래</span>를 만듭니다</h3>
+    <p>시니어퓨처를 통해 성장한 혁신가들이<br>초고령사회의 문제를 시장이 스스로 푸는 선순환을 만들어갑니다.<br>그 시작에 지금 함께해 주세요.</p>
+    <div class="sfm-cta-row">
+      <a class="sfm-btn sfm-btn-primary" href="https://walla.my/v/VXu0RAeHFNPZCQy9vKFG" target="_blank">10기 신청하기</a>
+      <a class="sfm-btn sfm-btn-white" href="https://apply.seniorfuture.kr/37234a84-148b-809b-8f8d-e877f141959c" style="background:#fff;color:#1a2744">멤버십 보기</a>
+    </div>
+  </div>
+
+  <!-- 10. 푸터 -->
+  <div class="sfm-footer">
+    <div class="sfm-foot-top">
+      <div class="sfm-foot-brand">
+        <div class="sfm-foot-logo-text">시니어퓨처</div>
+        <p>초고령사회, 비즈니스의 중심.<br>장수경제 비즈니스 인사이트와 멤버 성장 스토리를 전합니다.</p>
+        <div class="sfm-foot-sns">
+          <a href="https://www.instagram.com/senior_future" target="_blank">IG</a>
+          <a href="https://pf.kakao.com/_ZYaLG" target="_blank">KK</a>
+        </div>
+      </div>
+      <div class="sfm-foot-col">
+        <h4>프로그램</h4>
+        <a href="https://apply.seniorfuture.kr/37234a84-148b-805c-92fa-facada66bc65">비즈니스 스터디</a>
+        <a href="https://apply.seniorfuture.kr/37234a84-148b-8078-98e5-fa071a608220">창업 교육</a>
+        <a href="https://apply.seniorfuture.kr/37234a84-148b-8010-b9aa-fe7f7ce4b3ec">전문가 강연</a>
+        <a href="https://apply.seniorfuture.kr/37234a84-148b-801b-8182-fa3396cdab6f">현장 탐방</a>
+      </div>
+      <div class="sfm-foot-col">
+        <h4>시니어퓨처</h4>
+        <a href="https://apply.seniorfuture.kr/37234a84-148b-809b-8f8d-e877f141959c">멤버십</a>
+        <a href="https://apply.seniorfuture.kr/2c034a84-148b-8018-8c39-f06873cbfb58">기업 협업</a>
+        <a href="https://apply.seniorfuture.kr/2c034a84-148b-8083-8a25-d64b728c8b32">언론 보도</a>
+        <a href="https://apply.seniorfuture.kr/2e734a84-148b-807f-9136-d1928afd2b1a">참가자 후기</a>
+      </div>
+      <div class="sfm-foot-col">
+        <h4>문의</h4>
+        <a href="mailto:seniorfuture100@gmail.com">제휴 · 협업 문의</a>
+        <a href="https://pf.kakao.com/_ZYaLG" target="_blank">카카오톡 채널</a>
+        <a href="https://walla.my/v/HdUG9uCe2rRx9tw1X91u" target="_blank">무료 뉴스레터</a>
+      </div>
+    </div>
+    <div class="sfm-foot-biz">
+      <strong>시니어퓨처 (SeniorFuture)</strong><br>
+      사업자등록번호 858-27-01782 · 통신판매업신고번호 2026-서울관악-0090<br>
+      대표 정동호 · 연락처 010-3237-4502 · 제휴 문의 seniorfuture100@gmail.com<br>
+      주소 서울시 관악구 관악로 144 데스크 베이스캠프
+      <div class="sfm-foot-legal">
+        <a href="#">개인정보처리방침</a>
+        <a href="#">이용약관</a>
+      </div>
+    </div>
+  </div>
+  <div class="sfm-copyright">© 2026 SeniorFuture. All rights reserved.</div>
+
+</div>
+
+<script>
+var sfmIdx=0,sfmTotal=document.querySelectorAll('.sfm-slide').length,sfmDotsEl=document.getElementById('sfmDots');
+for(var i=0;i<sfmTotal;i++){var d=document.createElement('div');d.className='sfm-dot'+(i===0?' active':'');d.setAttribute('data-i',i);d.onclick=function(){sfmGo(parseInt(this.getAttribute('data-i')));};sfmDotsEl.appendChild(d);}
+function sfmRender(){document.getElementById('sfmSlides').style.transform='translateX(-'+(sfmIdx*100)+'%)';var dots=document.querySelectorAll('.sfm-dot');for(var i=0;i<dots.length;i++)dots[i].classList.toggle('active',i===sfmIdx);}
+function sfmMove(dir){sfmIdx=(sfmIdx+dir+sfmTotal)%sfmTotal;sfmRender();}
+function sfmGo(i){sfmIdx=i;sfmRender();}
+setInterval(function(){sfmMove(1);},4500);
+
+function sfmAnimateCount(el){var target=parseInt(el.getAttribute('data-target')),dur=1400,t0=null;function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);el.textContent=Math.floor(p*target).toLocaleString();if(p<1)requestAnimationFrame(step);else el.textContent=target.toLocaleString();}requestAnimationFrame(step);}
+var sfmCounted=false;
+function sfmCheckCount(){if(sfmCounted)return;var sec=document.querySelector('.sfm-stats-section');if(!sec)return;var r=sec.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0){sfmCounted=true;document.querySelectorAll('.sfm-count').forEach(sfmAnimateCount);}}
+window.addEventListener('scroll',sfmCheckCount);window.addEventListener('load',sfmCheckCount);setTimeout(sfmCheckCount,300);
+
+var sfmRevIdx=0;
+function sfmRevPerView(){return window.innerWidth<=560?1:(window.innerWidth<=1024?2:3);}
+function sfmRevMove(dir){var track=document.getElementById('sfmRevTrack'),total=track.children.length,per=sfmRevPerView(),maxIdx=total-per;sfmRevIdx=Math.max(0,Math.min(sfmRevIdx+dir,maxIdx));var cardW=track.children[0].getBoundingClientRect().width+16;track.style.transform='translateX(-'+(sfmRevIdx*cardW)+'px)';}
+window.addEventListener('resize',function(){sfmRevIdx=0;document.getElementById('sfmRevTrack').style.transform='translateX(0)';});
+</script>
+<script>
+/* 뉴스레터 신청 — 왈라 폼으로 이동 (버튼 link 처리) */
+</script>
+</body>
+</html>
